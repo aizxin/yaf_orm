@@ -11,6 +11,7 @@
 use Illuminate\Database\Capsule\Manager as Capsule;
 use Illuminate\Events\Dispatcher;
 use Illuminate\Container\Container;
+use think\Db;
 
 class Bootstrap extends Yaf\Bootstrap_Abstract {
 
@@ -43,7 +44,7 @@ class Bootstrap extends Yaf\Bootstrap_Abstract {
 		\Yaf\Loader::import( APP_PATH . '/vendor/autoload.php' );
 	}
 	/**
-	 * [__initEloquentOrm laravel的 Eloquent Orm数据库]
+	 * [_initEloquentOrm laravel的 Eloquent Orm数据库]
 	 * @param  Yaf\Dispatcher $dispatcher [description]
 	 * @return [type]                     [description]
 	 */
@@ -61,7 +62,7 @@ class Bootstrap extends Yaf\Bootstrap_Abstract {
 		    'password'  => $config->db->password,
 		    'charset'   => 'utf8',
 		    'collation' => 'utf8_unicode_ci',
-		    'prefix'    => '',
+		    'prefix'    => 'ccwb_',
 		]);
 
 		$capsule->setEventDispatcher(new Dispatcher(new Container));
@@ -71,5 +72,30 @@ class Bootstrap extends Yaf\Bootstrap_Abstract {
 
 		// Setup the Eloquent ORM... (optional; unless you've used setEventDispatcher())
 		$capsule->bootEloquent();
+	}
+	/**
+	 * [_initThinkOrm top-think的 Orm]
+	 * @param  Yaf\Dispatcher $dispatcher [description]
+	 * @return [type]                     [description]
+	 */
+	public function _initThinkOrm(Yaf\Dispatcher $dispatcher)
+	{
+		$config = Yaf\Application::app()->getConfig();
+		Db::setConfig([
+			// 数据库类型
+		    'type'            => "Mysql",
+		    // 服务器地址
+		    'hostname'        => $config->db->host,
+		    // 数据库名
+		    'database'        => $config->db->database,
+		    // 用户名
+		    'username'        => $config->db->username,
+		    // 密码
+		    'password'        => $config->db->password,
+		    // 端口
+		    'hostport'        => '3306',
+		    // 表前缀
+		    'prefix'          => 'ccwb_',
+		]);
 	}
 }
